@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import sseffortless.annotations.SSEvent;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -21,7 +22,7 @@ public class EventRegisterTest {
     }
 
     @Test
-    public void registerManual() {
+    public void register() {
         String action = "TEST_PAYLOAD";
         this.eventRegister.register(action, TestPayload.class);
 
@@ -30,7 +31,7 @@ public class EventRegisterTest {
     }
 
     @Test
-    public void registerAutomatic() {
+    public void registerWithoutAction() {
         this.eventRegister.register(TestPayload.class);
 
         Assert.assertTrue(this.eventRegister.isRegistered("TEST_PAYLOAD"));
@@ -38,8 +39,19 @@ public class EventRegisterTest {
     }
 
     @Test
-    public void registerAnnotation() {
-        // TODO: 25/03/2019 Write test
+    public void registerAnnotated() {
+        this.eventRegister.register(TestPayloadAnnotated.class);
+
+        Assert.assertTrue(this.eventRegister.isRegistered("TEST_PAYLOAD_ANNOTATED"));
+        Assert.assertTrue(this.eventRegister.isRegistered(TestPayloadAnnotated.class));
+    }
+
+    @Test
+    public void registerAnnotatedWithAction() {
+        this.eventRegister.register(TestPayloadAnnotatedWithAction.class);
+
+        Assert.assertTrue(this.eventRegister.isRegistered("TEST_PAYLOAD_WITH_ACTION"));
+        Assert.assertTrue(this.eventRegister.isRegistered(TestPayloadAnnotatedWithAction.class));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -72,6 +84,17 @@ public class EventRegisterTest {
         Assert.assertFalse(this.eventRegister.isRegistered(TestPayload.class));
     }
 
+
+    /* CLASSES */
+
     class TestPayload implements SSEPayload {
+    }
+
+    @SSEvent
+    class TestPayloadAnnotated implements SSEPayload {
+    }
+
+    @SSEvent(action = "TEST_PAYLOAD_WITH_ACTION")
+    class TestPayloadAnnotatedWithAction implements SSEPayload {
     }
 }

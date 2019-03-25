@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 @Component
 public class SSEventRegister {
 
-    private final Pattern actionPattern = Pattern.compile("[A-Z_]+");
+    private final Pattern actionPattern = Pattern.compile("[A-Z_0-9]+");
 
     private Map<Class<? extends SSEPayload>, String> registeredEvents = new HashMap<>();
 
@@ -30,7 +30,7 @@ public class SSEventRegister {
 
     public void register(String action, Class<? extends SSEPayload> payloadClass) {
         if (!this.actionPattern.matcher(action).matches()) {
-            throw new IllegalArgumentException("Actions may only consist out of capital letters and underscores");
+            throw new IllegalArgumentException("Actions may only consist out of capital letters, numbers and underscores");
         }
         if (this.isRegistered(payloadClass)) {
             throw new IllegalStateException(String.format("Payload %s is already registered", payloadClass.getSimpleName()));

@@ -99,14 +99,14 @@ public class SSEventRegisterTest {
 
     /* CLASSES */
 
-    class TestPayload implements SSEPayload {
+    private class TestPayload implements SSEPayload {
     }
 
     @SSEvent
-    class TestPayloadAnnotated implements SSEPayload {
+    private class TestPayloadAnnotated implements SSEPayload {
     }
 
     @SSEvent(action = "TEST_PAYLOAD_WITH_ACTION")
-    class TestPayloadAnnotatedWithAction implements SSEPayload {
+    private class TestPayloadAnnotatedWithAction implements SSEPayload {
     }
 }

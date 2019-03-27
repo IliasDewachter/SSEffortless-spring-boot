@@ -20,16 +20,14 @@ public class ActionConverter {
             }
         }
 
-        String action = payloadClass.getSimpleName();
-        Matcher matcher = pattern.matcher(action);
+        Matcher matcher = pattern.matcher(payloadClass.getSimpleName());
         StringBuffer sb = new StringBuffer();
         while (matcher.find()) {
             String[] match = matcher.group().split("");
             matcher.appendReplacement(sb, match[0] + "_" + match[1]);
         }
         matcher.appendTail(sb);
-        action = sb.toString().toUpperCase();
-        return action;
+        return sb.toString().toUpperCase();
     }
 
 }

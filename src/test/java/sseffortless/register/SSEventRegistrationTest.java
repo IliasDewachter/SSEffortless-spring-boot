@@ -9,6 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import sseffortless.SSEPayload;
 import sseffortless.annotations.SSEvent;
+import sseffortless.events.TestEvent;
+import sseffortless.events.TestEventAnnotated;
+import sseffortless.events.TestEventAnnotatedWithAction;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -28,23 +31,8 @@ public class SSEventRegistrationTest {
     public void registerEventWithAnnotations() {
         this.ssEventRegistration.registerSSEventAnnotations(true);
 
-        Assert.assertFalse(this.ssEventRegister.isRegistered(AnnotationEvent1.class));
-        Assert.assertTrue(this.ssEventRegister.isRegistered(AnnotationEvent2.class));
-        Assert.assertTrue(this.ssEventRegister.isRegistered(AnnotationEvent3.class));
+        Assert.assertFalse(this.ssEventRegister.isRegistered(TestEvent.class));
+        Assert.assertTrue(this.ssEventRegister.isRegistered(TestEventAnnotated.class));
+        Assert.assertTrue(this.ssEventRegister.isRegistered(TestEventAnnotatedWithAction.class));
     }
-
-
-    /* CLASSES */
-
-    private class AnnotationEvent1 implements SSEPayload {
-    }
-
-    @SSEvent
-    private class AnnotationEvent2 implements SSEPayload {
-    }
-
-    @SSEvent(action = "ANNOTATION_EVENT3")
-    private class AnnotationEvent3 implements SSEPayload {
-    }
-
 }

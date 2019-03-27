@@ -16,21 +16,21 @@ import sseffortless.events.TestEventAnnotatedWithAction;
 public class SSEventScannerTest {
 
     @Autowired
-    private SSEventScanner ssEventScanner;
+    private SSEventScanner eventScanner;
     @Autowired
-    private SSEventRegister ssEventRegister;
+    private SSEventRegister eventRegister;
 
     @Before
     public void setUp() {
-        this.ssEventRegister.unregisterAll();
+        this.eventRegister.unregisterAll();
     }
 
     @Test
     public void registerEventWithAnnotations() {
-        this.ssEventScanner.scanSSEventAnnotations(true);
+        this.eventScanner.scanSSEventAnnotations(true);
 
-        Assert.assertFalse(this.ssEventRegister.isRegistered(TestEvent.class));
-        Assert.assertTrue(this.ssEventRegister.isRegistered(TestEventAnnotated.class));
-        Assert.assertTrue(this.ssEventRegister.isRegistered(TestEventAnnotatedWithAction.class));
+        Assert.assertFalse(this.eventRegister.isRegistered(TestEvent.class));
+        Assert.assertTrue(this.eventRegister.isRegistered(TestEventAnnotated.class));
+        Assert.assertTrue(this.eventRegister.isRegistered(TestEventAnnotatedWithAction.class));
     }
 }

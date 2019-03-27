@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 public class SSEventScanner implements InitializingBean {
     private final static Logger LOGGER = LoggerFactory.getLogger(SSEventScanner.class);
 
-    private final SSEventRegister ssEventRegister;
+    private final SSEventRegister eventRegister;
 
     @Autowired
-    public SSEventScanner(SSEventRegister ssEventRegister) {
-        this.ssEventRegister = ssEventRegister;
+    public SSEventScanner(SSEventRegister eventRegister) {
+        this.eventRegister = eventRegister;
     }
 
 
@@ -41,10 +41,10 @@ public class SSEventScanner implements InitializingBean {
             Class<? extends SSEPayload> payloadClass = clazz.asSubclass(SSEPayload.class);
 
             if (removeIfRegistered) {
-                this.ssEventRegister.unregister(payloadClass);
+                this.eventRegister.unregister(payloadClass);
             }
 
-            this.ssEventRegister.register(payloadClass);
+            this.eventRegister.register(payloadClass);
             newEvents.add(payloadClass);
         }
 

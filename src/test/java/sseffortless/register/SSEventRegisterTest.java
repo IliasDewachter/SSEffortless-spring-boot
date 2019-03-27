@@ -7,8 +7,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import sseffortless.SSEPayload;
-import sseffortless.annotations.SSEvent;
 import sseffortless.events.TestEvent;
 import sseffortless.events.TestEventAnnotated;
 import sseffortless.events.TestEventAnnotatedWithAction;
@@ -18,85 +16,85 @@ import sseffortless.events.TestEventAnnotatedWithAction;
 public class SSEventRegisterTest {
 
     @Autowired
-    private SSEventRegister SSEventRegister;
+    private SSEventRegister eventRegister;
 
     @Before
     public void setUp() {
-        this.SSEventRegister.unregisterAll();
+        this.eventRegister.unregisterAll();
     }
 
     @Test
     public void register() {
         String action = "TEST_EVENT";
-        this.SSEventRegister.register(action, TestEvent.class);
+        this.eventRegister.register(action, TestEvent.class);
 
-        Assert.assertTrue(this.SSEventRegister.isRegistered(action));
-        Assert.assertTrue(this.SSEventRegister.isRegistered(TestEvent.class));
+        Assert.assertTrue(this.eventRegister.isRegistered(action));
+        Assert.assertTrue(this.eventRegister.isRegistered(TestEvent.class));
     }
 
     @Test
     public void registerWithoutAction() {
-        this.SSEventRegister.register(TestEvent.class);
+        this.eventRegister.register(TestEvent.class);
 
-        Assert.assertTrue(this.SSEventRegister.isRegistered("TEST_EVENT"));
-        Assert.assertTrue(this.SSEventRegister.isRegistered(TestEvent.class));
+        Assert.assertTrue(this.eventRegister.isRegistered("TEST_EVENT"));
+        Assert.assertTrue(this.eventRegister.isRegistered(TestEvent.class));
     }
 
     @Test
     public void registerAnnotated() {
-        this.SSEventRegister.register(TestEventAnnotated.class);
+        this.eventRegister.register(TestEventAnnotated.class);
 
-        Assert.assertTrue(this.SSEventRegister.isRegistered("TEST_EVENT_ANNOTATED"));
-        Assert.assertTrue(this.SSEventRegister.isRegistered(TestEventAnnotated.class));
+        Assert.assertTrue(this.eventRegister.isRegistered("TEST_EVENT_ANNOTATED"));
+        Assert.assertTrue(this.eventRegister.isRegistered(TestEventAnnotated.class));
     }
 
     @Test
     public void registerAnnotatedWithAction() {
-        this.SSEventRegister.register(TestEventAnnotatedWithAction.class);
+        this.eventRegister.register(TestEventAnnotatedWithAction.class);
 
-        Assert.assertTrue(this.SSEventRegister.isRegistered("TEST_EVENT_WITH_ACTION"));
-        Assert.assertTrue(this.SSEventRegister.isRegistered(TestEventAnnotatedWithAction.class));
+        Assert.assertTrue(this.eventRegister.isRegistered("TEST_EVENT_WITH_ACTION"));
+        Assert.assertTrue(this.eventRegister.isRegistered(TestEventAnnotatedWithAction.class));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void registerInvalidAction1() {
-        this.SSEventRegister.register("test_event", TestEvent.class);
+        this.eventRegister.register("test_event", TestEvent.class);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void registerInvalidAction2() {
-        this.SSEventRegister.register("TEST-EVENT", TestEvent.class);
+        this.eventRegister.register("TEST-EVENT", TestEvent.class);
     }
 
     @Test
     public void unregisterByAction() {
         String action = "TEST_EVENT";
-        this.SSEventRegister.register(action, TestEvent.class);
+        this.eventRegister.register(action, TestEvent.class);
 
-        this.SSEventRegister.unregister(action);
-        Assert.assertFalse(this.SSEventRegister.isRegistered(action));
-        Assert.assertFalse(this.SSEventRegister.isRegistered(TestEvent.class));
+        this.eventRegister.unregister(action);
+        Assert.assertFalse(this.eventRegister.isRegistered(action));
+        Assert.assertFalse(this.eventRegister.isRegistered(TestEvent.class));
     }
 
     @Test
     public void unregisterByClass() {
         String action = "TEST_EVENT";
-        this.SSEventRegister.register(action, TestEvent.class);
+        this.eventRegister.register(action, TestEvent.class);
 
-        this.SSEventRegister.unregister(TestEvent.class);
-        Assert.assertFalse(this.SSEventRegister.isRegistered(action));
-        Assert.assertFalse(this.SSEventRegister.isRegistered(TestEvent.class));
+        this.eventRegister.unregister(TestEvent.class);
+        Assert.assertFalse(this.eventRegister.isRegistered(action));
+        Assert.assertFalse(this.eventRegister.isRegistered(TestEvent.class));
     }
 
     @Test
     public void unregisterAll() {
-        this.SSEventRegister.register(TestEvent.class);
-        this.SSEventRegister.register(TestEventAnnotated.class);
-        this.SSEventRegister.register(TestEventAnnotatedWithAction.class);
-        this.SSEventRegister.unregisterAll();
+        this.eventRegister.register(TestEvent.class);
+        this.eventRegister.register(TestEventAnnotated.class);
+        this.eventRegister.register(TestEventAnnotatedWithAction.class);
+        this.eventRegister.unregisterAll();
 
-        Assert.assertFalse(this.SSEventRegister.isRegistered(TestEvent.class));
-        Assert.assertFalse(this.SSEventRegister.isRegistered(TestEventAnnotated.class));
-        Assert.assertFalse(this.SSEventRegister.isRegistered(TestEventAnnotatedWithAction.class));
+        Assert.assertFalse(this.eventRegister.isRegistered(TestEvent.class));
+        Assert.assertFalse(this.eventRegister.isRegistered(TestEventAnnotated.class));
+        Assert.assertFalse(this.eventRegister.isRegistered(TestEventAnnotatedWithAction.class));
     }
 }

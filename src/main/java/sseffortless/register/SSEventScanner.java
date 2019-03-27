@@ -14,29 +14,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class SSEventRegistration implements InitializingBean {
-    private final static Logger LOGGER = LoggerFactory.getLogger(SSEventRegistration.class);
+public class SSEventScanner implements InitializingBean {
+    private final static Logger LOGGER = LoggerFactory.getLogger(SSEventScanner.class);
 
     private final SSEventRegister ssEventRegister;
 
     @Autowired
-    public SSEventRegistration(SSEventRegister ssEventRegister) {
+    public SSEventScanner(SSEventRegister ssEventRegister) {
         this.ssEventRegister = ssEventRegister;
     }
 
 
     @Override
     public void afterPropertiesSet() {
-        this.registerSSEventAnnotations();
+        this.scanSSEventAnnotations(false);
     }
 
-    public void registerSSEventAnnotations() {
-        this.registerSSEventAnnotations(false);
-    }
-
-    public void registerSSEventAnnotations(boolean removeIfRegistered) {
+    public void scanSSEventAnnotations(boolean removeIfRegistered) {
         Iterable<Class<?>> classes = ClassIndex.getAnnotated(SSEvent.class);
-        List<Class<? extends SSEPayload>> registeredEvents = new ArrayList<>();
+        List<Class<? extends SSEPayload>> newEvents = new ArrayList<>();
         for (Class<?> clazz : classes) {
             if (!SSEPayload.class.isAssignableFrom(clazz)) {
                 LOGGER.error("SSEvent {} does not implement SSEPayload, not registering SSEvent.", clazz.getSimpleName());
@@ -49,9 +45,9 @@ public class SSEventRegistration implements InitializingBean {
             }
 
             this.ssEventRegister.register(payloadClass);
-            registeredEvents.add(payloadClass);
+            newEvents.add(payloadClass);
         }
 
-        LOGGER.info("Registered SSEvents: {}", registeredEvents.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")));
+        LOGGER.info("Registered SSEvents: {}", newEvents.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")));
     }
 }

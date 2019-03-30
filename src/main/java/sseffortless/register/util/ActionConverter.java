@@ -15,8 +15,8 @@ public class ActionConverter {
     public String convertToAction(Class<? extends SSEPayload> payloadClass) {
         if (payloadClass.isAnnotationPresent(SSEvent.class)) {
             SSEvent ssEvent = payloadClass.getAnnotation(SSEvent.class);
-            if (!ssEvent.action().equals("")) {
-                return ssEvent.action();
+            if (!ssEvent.value().equals("")) {
+                return ssEvent.value();
             }
         }
 

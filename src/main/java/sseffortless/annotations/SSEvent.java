@@ -9,5 +9,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @IndexAnnotated
 public @interface SSEvent {
-    String action() default "";
+    String value() default "";
 }

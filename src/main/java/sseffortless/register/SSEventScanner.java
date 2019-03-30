@@ -48,6 +48,6 @@ public class SSEventScanner implements InitializingBean {
             newEvents.add(payloadClass);
         }
 
-        LOGGER.info("Registered SSEvents: {}", newEvents.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")));
+        LOGGER.info("Registered SSEvents ({}): {}", newEvents.size(), newEvents.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")));
     }
 }

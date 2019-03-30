@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sseffortless.SSEPayload;
+import sseffortless.model.SSEPayload;
 import sseffortless.annotations.SSEvent;
 
 import java.util.ArrayList;
@@ -48,6 +48,6 @@ public class SSEventScanner implements InitializingBean {
             newEvents.add(payloadClass);
         }
 
-        LOGGER.info("Registered SSEvents: {}", newEvents.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")));
+        LOGGER.info("Registered SSEvents ({}): {}", newEvents.size(), newEvents.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")));
     }
 }

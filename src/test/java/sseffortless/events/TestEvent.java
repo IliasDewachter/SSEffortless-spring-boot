@@ -1,6 +1,6 @@
 package sseffortless.events;
 
-import sseffortless.SSEPayload;
+import sseffortless.model.SSEPayload;
 
 public class TestEvent implements SSEPayload {
 }

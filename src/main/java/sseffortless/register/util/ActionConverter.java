@@ -1,7 +1,7 @@
 package sseffortless.register.util;
 
 import org.springframework.stereotype.Component;
-import sseffortless.SSEPayload;
+import sseffortless.model.SSEPayload;
 import sseffortless.annotations.SSEvent;
 
 import java.util.regex.Matcher;
@@ -15,8 +15,8 @@ public class ActionConverter {
     public String convertToAction(Class<? extends SSEPayload> payloadClass) {
         if (payloadClass.isAnnotationPresent(SSEvent.class)) {
             SSEvent ssEvent = payloadClass.getAnnotation(SSEvent.class);
-            if (!ssEvent.action().equals("")) {
-                return ssEvent.action();
+            if (!ssEvent.value().equals("")) {
+                return ssEvent.value();
             }
         }
 

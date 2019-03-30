@@ -27,10 +27,10 @@ public class SSEventScannerTest {
 
     @Test
     public void registerEventWithAnnotations() {
-        this.eventScanner.scanSSEventAnnotations(true);
+        eventScanner.scanSSEventAnnotations(true);
 
-        Assert.assertFalse(this.eventRegister.isRegistered(TestEvent.class));
-        Assert.assertTrue(this.eventRegister.isRegistered(TestEventAnnotated.class));
-        Assert.assertTrue(this.eventRegister.isRegistered(TestEventAnnotatedWithAction.class));
+        Assert.assertFalse(eventRegister.isRegistered(TestEvent.class));
+        Assert.assertTrue(eventRegister.isRegistered(TestEventAnnotated.class));
+        Assert.assertTrue(eventRegister.isRegistered(TestEventAnnotatedWithAction.class));
     }
 }

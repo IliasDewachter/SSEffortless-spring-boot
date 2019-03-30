@@ -1,4 +1,4 @@
-package sseffortless.clients;
+package sseffortless.clients.client;
 
 public class SSEClientImpl extends SSEClient {
 

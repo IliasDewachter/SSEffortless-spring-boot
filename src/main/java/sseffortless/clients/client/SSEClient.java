@@ -1,4 +1,4 @@
-package sseffortless.clients;
+package sseffortless.clients.client;
 
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 

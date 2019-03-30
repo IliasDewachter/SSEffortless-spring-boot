@@ -1,6 +1,7 @@
-package sseffortless.clients;
+package sseffortless.clients.client;
 
 import org.springframework.stereotype.Component;
+import sseffortless.clients.SSEClientProperties;
 
 @Component
 public class SSEClientFactory {

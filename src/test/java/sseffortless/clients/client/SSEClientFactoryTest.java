@@ -1,4 +1,4 @@
-package sseffortless.clients;
+package sseffortless.clients.client;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,6 +26,7 @@ public class SSEClientFactoryTest {
         Assert.assertNotNull(client.getSseEmitter());
         Assert.assertEquals(5000L, (long) client.getSseEmitter().getTimeout());
     }
+
     @Test
     public void createClientDefaultTimeout() {
         SSEClient client = clientFactory.createClient();

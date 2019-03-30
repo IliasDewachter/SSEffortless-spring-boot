@@ -1,14 +1,13 @@
-package sseffortless;
+package sseffortless.model;
 
 import lombok.Getter;
-
 @Getter
-class Event {
+public class Event {
 
     private String action;
     private SSEPayload payload;
 
-    Event(String action, SSEPayload payload) {
+    public Event(String action, SSEPayload payload) {
         this.action = action;
         this.payload = payload;
     }

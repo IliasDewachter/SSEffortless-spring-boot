@@ -1,6 +1,6 @@
 package sseffortless.events;
 
-import sseffortless.SSEPayload;
+import sseffortless.model.SSEPayload;
 import sseffortless.annotations.SSEvent;
 
 @SSEvent("TEST_EVENT_WITH_ACTION")

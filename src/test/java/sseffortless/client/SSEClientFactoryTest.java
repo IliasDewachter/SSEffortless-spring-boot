@@ -1,4 +1,4 @@
-package sseffortless.clients.client;
+package sseffortless.client;
 
 import org.junit.Assert;
 import org.junit.Test;

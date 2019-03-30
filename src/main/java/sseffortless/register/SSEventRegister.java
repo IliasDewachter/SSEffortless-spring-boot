@@ -2,7 +2,7 @@ package sseffortless.register;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sseffortless.SSEPayload;
+import sseffortless.model.SSEPayload;
 import sseffortless.register.util.ActionConverter;
 
 import java.util.HashMap;
@@ -76,5 +76,14 @@ public class SSEventRegister {
 
     public void unregisterAll() {
         this.registeredEvents.clear();
+    }
+
+    public String getAction(SSEPayload payload) {
+        for (Class<? extends SSEPayload> payloadClass : registeredEvents.keySet()) {
+            if (payload.getClass().equals(payloadClass)) {
+                return registeredEvents.get(payloadClass);
+            }
+        }
+        throw new IllegalArgumentException(String.format("No action registered for payload %s.", payload.getClass().getSimpleName()));
     }
 }

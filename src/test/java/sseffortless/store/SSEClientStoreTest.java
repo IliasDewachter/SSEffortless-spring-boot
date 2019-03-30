@@ -1,4 +1,4 @@
-package sseffortless.clients.store;
+package sseffortless.store;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -6,8 +6,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import sseffortless.clients.client.SSEClient;
-import sseffortless.clients.client.SSEClientFactory;
+import sseffortless.client.SSEClient;
+import sseffortless.client.SSEClientFactory;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)

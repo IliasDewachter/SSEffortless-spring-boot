@@ -1,7 +1,7 @@
 package sseffortless.register.util;
 
 import org.springframework.stereotype.Component;
-import sseffortless.SSEPayload;
+import sseffortless.model.SSEPayload;
 import sseffortless.annotations.SSEvent;
 
 import java.util.regex.Matcher;

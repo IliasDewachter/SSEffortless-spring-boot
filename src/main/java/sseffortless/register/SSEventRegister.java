@@ -7,6 +7,7 @@ import sseffortless.register.util.ActionConverter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 @Component
@@ -29,6 +30,9 @@ public class SSEventRegister {
     }
 
     public void register(String action, Class<? extends SSEPayload> payloadClass) {
+        Objects.requireNonNull(action);
+        Objects.requireNonNull(payloadClass);
+
         if (!this.actionPattern.matcher(action).matches()) {
             throw new IllegalArgumentException("Actions may only consist out of capital letters, numbers and underscores");
         }

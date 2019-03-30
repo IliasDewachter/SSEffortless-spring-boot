@@ -4,12 +4,16 @@ import sseffortless.clients.client.SSEClient;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
-public final class SSEClientStore<K> {
+public class SSEClientStore<K> {
 
     private Map<K, SSEClient> clientStore = new HashMap<>();
 
     public void register(K key, SSEClient client) {
+        Objects.requireNonNull(key);
+        Objects.requireNonNull(client);
+
         if (this.isRegistered(key)) {
             throw new IllegalStateException(String.format("Key %s is already registered.", key.toString()));
         }

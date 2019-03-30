@@ -3,10 +3,10 @@ package sseffortless;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Example {
+public class SSEffortless {
 
-    public boolean isReady() {
-        return true;
+    public SSEffortless() {
+
     }
 
 }

@@ -1,5 +1,7 @@
 package sseffortless;
 
+import com.google.gson.Gson;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import sseffortless.model.Event;
 import sseffortless.model.SSEPayload;
 import sseffortless.client.SSEClient;
@@ -12,11 +14,14 @@ import java.util.Objects;
 
 public class SSEffortless<K> extends SSEClientStore<K> {
 
+    private final Gson gson;
+
     private final SSEventRegister eventRegister;
 
     SSEffortless(SSEventRegister eventRegister) {
         super();
         this.eventRegister = eventRegister;
+        this.gson = new Gson();
     }
 
     public void broadcast(SSEPayload payload) {
@@ -42,25 +47,26 @@ public class SSEffortless<K> extends SSEClientStore<K> {
 
     private void push(SSEClient client, SSEPayload payload) {
         String action = eventRegister.getAction(payload);
-        Event event = new Event(action, payload);
-
-        try {
-            client.push(event);
-        } catch (IOException e) {
-            super.unregister(client);
-        }
+        this.push(client, payload, action);
     }
 
     private void push(Collection<SSEClient> clients, SSEPayload payload) {
         String action = eventRegister.getAction(payload);
-        Event event = new Event(action, payload);
-
         for (SSEClient client : clients) {
-            try {
-                client.push(event);
-            } catch (IOException e) {
-                super.unregister(client);
-            }
+            this.push(client, payload, action);
+        }
+    }
+
+    private void push(SSEClient client, SSEPayload payload, String action) {
+        if (!client.prePush(action, payload)) return;
+
+        Event event = new Event(action, gson.toJson(payload));
+        SseEmitter emitter = super.getEmitter(client);
+
+        try {
+            emitter.send(event);
+        } catch (IOException e) {
+            super.unregister(client);
         }
     }
 

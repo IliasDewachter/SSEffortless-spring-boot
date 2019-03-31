@@ -23,8 +23,7 @@ public class SSEClientFactoryTest {
         SSEClient client = clientFactory.createClient(5000L);
 
         Assert.assertNotNull(client);
-        Assert.assertNotNull(client.getSseEmitter());
-        Assert.assertEquals(5000L, (long) client.getSseEmitter().getTimeout());
+        Assert.assertEquals(5000L, client.getTimeout());
     }
 
     @Test
@@ -32,7 +31,6 @@ public class SSEClientFactoryTest {
         SSEClient client = clientFactory.createClient();
 
         Assert.assertNotNull(client);
-        Assert.assertNotNull(client.getSseEmitter());
-        Assert.assertEquals(timeout, (long) client.getSseEmitter().getTimeout());
+        Assert.assertEquals(timeout, client.getTimeout());
     }
 }

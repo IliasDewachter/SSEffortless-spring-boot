@@ -1,5 +1,6 @@
 package sseffortless.store;
 
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import sseffortless.client.SSEClient;
 
 import java.util.*;
@@ -7,12 +8,14 @@ import java.util.*;
 public class SSEClientStore<K> {
 
     private final Map<K, SSEClient> clientStore;
+    private final Map<SSEClient, SseEmitter> emitters;
 
     public SSEClientStore() {
         clientStore = new HashMap<>();
+        emitters = new HashMap<>();
     }
 
-    public void register(K key, SSEClient client) {
+    public SseEmitter register(K key, SSEClient client) {
         Objects.requireNonNull(key);
         Objects.requireNonNull(client);
 
@@ -22,14 +25,18 @@ public class SSEClientStore<K> {
         if (this.isRegistered(client)) {
             throw new IllegalStateException("Client is already registered.");
         }
+
+        SseEmitter emitter = new SseEmitter(client.getTimeout());
         clientStore.put(key, client);
+        emitters.put(client, emitter);
+        return emitter;
     }
 
-    public Collection<SSEClient> getClients() {
+    protected Collection<SSEClient> getClients() {
         return clientStore.values();
     }
 
-    public Collection<SSEClient> getClients(Collection<K> keys) {
+    protected Collection<SSEClient> getClients(Collection<K> keys) {
         List<SSEClient> clients = new ArrayList<>();
         for (K key : keys) {
             clients.add(clientStore.get(key));
@@ -37,8 +44,12 @@ public class SSEClientStore<K> {
         return clients;
     }
 
-    public SSEClient getClient(K key) {
+    protected SSEClient getClient(K key) {
         return clientStore.get(key);
+    }
+
+    protected SseEmitter getEmitter(SSEClient client) {
+        return emitters.get(client);
     }
 
     public boolean isRegistered(K key) {
@@ -50,7 +61,10 @@ public class SSEClientStore<K> {
     }
 
     public boolean unregister(K key) {
-        return clientStore.remove(key) != null;
+        SSEClient client = clientStore.remove(key);
+        if (client == null) return false;
+        emitters.remove(client);
+        return true;
     }
 
     public boolean unregister(SSEClient client) {
@@ -58,6 +72,7 @@ public class SSEClientStore<K> {
             SSEClient sseClient = clientStore.get(key);
             if (client == sseClient) {
                 clientStore.remove(key);
+                emitters.remove(client);
                 return true;
             }
         }

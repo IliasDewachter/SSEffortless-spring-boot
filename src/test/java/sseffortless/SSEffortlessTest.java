@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import sseffortless.client.SSEClient;
 import sseffortless.client.SSEClientFactory;
 import sseffortless.events.TestDataEvent;
@@ -36,20 +37,18 @@ public class SSEffortlessTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private SSEClient client;
-
     @Before
     public void setUp() {
         eventScanner.scanSSEventAnnotations(true);
-        client = clientFactory.createClient();
-        testController.setClient(client);
     }
 
     @Test
     public void unicast() throws Exception {
+        SSEClient client = clientFactory.createClient();
         Long key = 1234L;
         SSEffortless<Long> effortless = effortlessFactory.createEffortless();
-        effortless.register(key, client);
+        SseEmitter emitter = effortless.register(key, client);
+        testController.setEmitter(emitter);
 
         String data = "This data should be sent";
         effortless.unicast(key, new TestDataEvent(data));
@@ -64,9 +63,11 @@ public class SSEffortlessTest {
 
     @Test
     public void broadcast() throws Exception {
+        SSEClient client = clientFactory.createClient();
         Long key = 1234L;
         SSEffortless<Long> effortless = effortlessFactory.createEffortless();
-        effortless.register(key, client);
+        SseEmitter emitter = effortless.register(key, client);
+        testController.setEmitter(emitter);
 
         String data = "This data should be sent";
         effortless.broadcast(new TestDataEvent(data));
@@ -81,9 +82,11 @@ public class SSEffortlessTest {
 
     @Test
     public void multicast() throws Exception {
+        SSEClient client = clientFactory.createClient();
         Long key = 1234L;
         SSEffortless<Long> effortless = effortlessFactory.createEffortless();
-        effortless.register(1234L, client);
+        SseEmitter emitter = effortless.register(key, client);
+        testController.setEmitter(emitter);
 
         String data = "This data should be sent";
         Collection<Long> keys = new ArrayList<>();

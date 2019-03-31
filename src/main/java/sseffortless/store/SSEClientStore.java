@@ -7,7 +7,7 @@ import java.util.*;
 
 public class SSEClientStore<K> {
 
-    private final Map<K, SSEClient> clientStore;
+    private final Map<K, Collection<SSEClient>> clientStore;
     private final Map<SSEClient, SseEmitter> emitters;
 
     public SSEClientStore() {
@@ -19,32 +19,37 @@ public class SSEClientStore<K> {
         Objects.requireNonNull(key);
         Objects.requireNonNull(client);
 
-        if (this.isRegistered(key)) {
-            throw new IllegalStateException(String.format("Key %s is already registered.", key.toString()));
-        }
         if (this.isRegistered(client)) {
             throw new IllegalStateException("Client is already registered.");
         }
 
         SseEmitter emitter = new SseEmitter(client.getTimeout());
-        clientStore.put(key, client);
+
+        Collection<SSEClient> clients = clientStore.getOrDefault(key, new ArrayList<>());
+        clients.add(client);
+        clientStore.put(key, clients);
+
         emitters.put(client, emitter);
         return emitter;
     }
 
     protected Collection<SSEClient> getClients() {
-        return clientStore.values();
-    }
-
-    protected Collection<SSEClient> getClients(Collection<K> keys) {
-        List<SSEClient> clients = new ArrayList<>();
-        for (K key : keys) {
-            clients.add(clientStore.get(key));
+        Collection<SSEClient> clients = new ArrayList<>();
+        for (Collection<SSEClient> sseClients : clientStore.values()) {
+            clients.addAll(sseClients);
         }
         return clients;
     }
 
-    protected SSEClient getClient(K key) {
+    protected Collection<SSEClient> getClients(Collection<K> keys) {
+        Collection<SSEClient> clients = new ArrayList<>();
+        for (K key : keys) {
+            clients.addAll(clientStore.get(key));
+        }
+        return clients;
+    }
+
+    protected Collection<SSEClient> getClients(K key) {
         return clientStore.get(key);
     }
 
@@ -57,21 +62,31 @@ public class SSEClientStore<K> {
     }
 
     public boolean isRegistered(SSEClient client) {
-        return clientStore.containsValue(client);
+        for (Collection<SSEClient> clients : clientStore.values()) {
+            if (clients.contains(client)) return true;
+        }
+        return false;
     }
 
     public boolean unregister(K key) {
-        SSEClient client = clientStore.remove(key);
-        if (client == null) return false;
-        emitters.remove(client);
+        if (!clientStore.containsKey(key)) return false;
+
+        Collection<SSEClient> clients = clientStore.remove(key);
+        for (SSEClient client : clients) {
+            emitters.remove(client);
+        }
         return true;
     }
 
     public boolean unregister(SSEClient client) {
         for (K key : clientStore.keySet()) {
-            SSEClient sseClient = clientStore.get(key);
-            if (client == sseClient) {
-                clientStore.remove(key);
+            Collection<SSEClient> clients = clientStore.remove(key);
+
+            if (clients.contains(client)) {
+                clients.remove(client);
+                if (clients.size() == 0) {
+                    clientStore.remove(key);
+                }
                 emitters.remove(client);
                 return true;
             }

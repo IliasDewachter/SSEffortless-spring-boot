@@ -29,21 +29,23 @@ public class SSEClientStoreTest {
         Assert.assertTrue(clientStore.isRegistered(client));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void registerKeyTwice() {
         SSEClient client1 = clientFactory.createClient();
         SSEClient client2 = clientFactory.createClient();
-
         long key = 1000L;
 
         clientStore.register(key, client1);
         clientStore.register(key, client2);
+
+        Assert.assertTrue(clientStore.isRegistered(key));
+        Assert.assertTrue(clientStore.isRegistered(client1));
+        Assert.assertTrue(clientStore.isRegistered(client2));
     }
 
     @Test(expected = IllegalStateException.class)
     public void registerClientTwice() {
         SSEClient client = clientFactory.createClient();
-
         long key1 = 1000L;
         long key2 = 2000L;
 

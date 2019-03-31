@@ -40,33 +40,26 @@ public class SSEffortless<K> extends SSEClientStore<K> {
     public void unicast(K key, SSEPayload payload) {
         Objects.requireNonNull(key);
         Objects.requireNonNull(payload);
-        SSEClient client = super.getClient(key);
-        this.push(client, payload);
+        Collection<SSEClient> clients = super.getClients(key);
+        this.push(clients, payload);
     }
 
+    private void push(Collection<SSEClient> clients, SSEPayload originalPayload) {
 
-    private void push(SSEClient client, SSEPayload payload) {
-        String action = eventRegister.getAction(payload);
-        this.push(client, payload, action);
-    }
-
-    private void push(Collection<SSEClient> clients, SSEPayload payload) {
-        String action = eventRegister.getAction(payload);
         for (SSEClient client : clients) {
-            this.push(client, payload, action);
-        }
-    }
+            SSEPayload payload = gson.fromJson(gson.toJson(originalPayload), originalPayload.getClass());
+            String action = eventRegister.getAction(payload);
+            if (!client.prePush(action, payload)) continue;
 
-    private void push(SSEClient client, SSEPayload payload, String action) {
-        if (!client.prePush(action, payload)) return;
+            Event event = new Event(action, gson.toJson(payload));
+            SseEmitter emitter = super.getEmitter(client);
 
-        Event event = new Event(action, gson.toJson(payload));
-        SseEmitter emitter = super.getEmitter(client);
+            try {
+                emitter.send(event);
+            } catch (IOException e) {
+                super.unregister(client);
+            }
 
-        try {
-            emitter.send(event);
-        } catch (IOException e) {
-            super.unregister(client);
         }
     }
 

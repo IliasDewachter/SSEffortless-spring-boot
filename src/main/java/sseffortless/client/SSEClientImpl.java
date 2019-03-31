@@ -1,6 +1,6 @@
 package sseffortless.client;
 
-import sseffortless.model.Event;
+import sseffortless.model.SSEPayload;
 
 class SSEClientImpl extends SSEClient {
 
@@ -9,7 +9,7 @@ class SSEClientImpl extends SSEClient {
     }
 
     @Override
-    boolean prePush(Event event) {
+    public boolean prePush(String action, SSEPayload payload) {
         return true;
     }
 }

@@ -8,14 +8,14 @@ import sseffortless.client.SSEClient;
 @RestController
 public class TestController {
 
-    private SSEClient client;
+    private SseEmitter emitter;
 
     @GetMapping
     public SseEmitter getClient() {
-        return client.getSseEmitter();
+        return emitter;
     }
 
-    public void setClient(SSEClient client) {
-        this.client = client;
+    public void setEmitter(SseEmitter emitter) {
+        this.emitter = emitter;
     }
 }
